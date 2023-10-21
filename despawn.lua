@@ -4,7 +4,6 @@ local data = {
 }
 
 -- Copied from ScriptHawk: https://github.com/Isotarge/ScriptHawk/blob/master/games/bk_objects_USA.lua
--- Not working correctly, i.e. crash when despawning (some ID have probably changed)
 local objects_names = {
 	{id=0x0004, name="Bigbutt"},
 	{id=0x0005, name="Ticker"},
@@ -616,21 +615,22 @@ function data.draw()
 		local count = memory.read_u32(list)
 		local inhand = memory.read_u32(0x8248f614)
 		imgui.text(string.format("actors: %d", count))
-		imgui.text(string.format("inhand: %x", inhand))
+		--imgui.text(string.format("inhand: %x", inhand))
 
 		local actor = list + 8
 		for i = 1, count do
 			if actor ~= 0 then
 				local actorinfo = memory.read_u32(actor + 0x130)
 				if actorinfo ~= 0 then
-					local actor_id = memory.read_u16(actorinfo)
+					local marker = memory.read_u32(actor)
+					local actor_id = memory.read_u16(actorinfo + 2)
 
-					imgui.text(string.format("actor %d: %x %s", i, actor_id, get_object_name(actor_id)))
+					imgui.text(string.format("actor %d: %s", i, get_object_name(actor_id)))
 
-					if inhand ~= actor then
+					if inhand ~= marker then
 						imgui.sameline()
-						if imgui.button(string.format("hold##%d", actor)) then
-							memory.write_u32(0x8248f614, actor)
+						if imgui.button(string.format("hold##%d", marker)) then
+							memory.write_u32(0x8248f614, marker)
 						end
 					end
 				end

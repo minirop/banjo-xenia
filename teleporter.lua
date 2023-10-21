@@ -170,7 +170,7 @@ function data.draw()
 	end
 
 	local curr_map = memory.read_u8(0x8249196d)
-	imgui.text(string.format("current map: %s (%d) / %s (%d)", maps[curr_map], curr_map, maps[curr_map+1], curr_map+1))
+	imgui.text(string.format("current map: %s", maps[curr_map]))
 end
 
 return data
